@@ -1,0 +1,84 @@
+/* M1 visual layer: polished course branding, state-diagram styling, and motion. */
+body {
+  background: radial-gradient(ellipse at 85% 3%, #e3edfb 0, transparent 34rem),
+    linear-gradient(180deg, #f6f8fc 0, #eef3f9 100%);
+}
+header {
+  background: linear-gradient(112deg, #10233e 0%, #183b67 58%, #225494 100%);
+  box-shadow: 0 5px 22px #10233e20;
+}
+.m1-brand { display: flex; align-items: center; gap: 14px; }
+.m1-mark {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff24;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #ffffff2e, #ffffff0c);
+  box-shadow: inset 0 1px #ffffff35, 0 5px 16px #07172e30;
+  color: #d8e8ff;
+  font-size: 25px;
+}
+.m1-brand h1 { letter-spacing: -.02em; }
+.m1-brand p { margin-top: 3px; color: #c2d2e6; font-size: 12px; }
+.card {
+  border-color: #d8e2ee;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px #142b460c, 0 1px 2px #142b4607;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.card:hover { box-shadow: 0 11px 32px #142b4611, 0 2px 4px #142b4608; }
+button { box-shadow: 0 3px 8px #2764b42e; transition: background .16s ease, transform .16s ease; }
+button:hover { transform: translateY(-1px); }
+button:active { transform: translateY(1px) scale(.98); }
+button.secondary { box-shadow: none; border: 1px solid #d8e2ee; }
+input:focus, textarea:focus { outline: 0; border-color: #6594d2; box-shadow: 0 0 0 3px #2461b21a; }
+.diagram-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0 16px; }
+.diagram-card { min-width: 0; overflow: hidden; border: 1px solid #d5e0ec; border-radius: 12px; background: #fff; }
+.diagram-heading { min-height: 40px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 12px; border-bottom: 1px solid #dce4ed; background: linear-gradient(180deg, #fbfcfe, #f3f7fc); color: #2b405b; font-size: 12px; }
+.diagram-heading span { color: #738196; font-size: 10px; font-weight: 500; }
+.diagram { height: 270px; display: flex; align-items: center; overflow: auto; background-color: #fbfdff; background-image: radial-gradient(#dbe5f0 .8px, transparent .8px); background-size: 18px 18px; }
+.diagram { position: relative; overflow: hidden; cursor: grab; touch-action: none; }
+.diagram.is-dragging { cursor: grabbing; }
+.diagram svg { position: absolute; left: 0; top: 0; display: block; min-width: 0; max-width: none; height: 100%; flex: none; }
+.graph-tools { min-height: 35px; display: flex; align-items: center; justify-content: flex-end; gap: 5px; padding: 4px 9px; border-bottom: 1px solid #dce4ed; background: #f7f9fc; }
+.graph-tools button { min-width: 27px; height: 25px; padding: 2px 7px; border: 1px solid #d6e0eb; border-radius: 6px; color: #315277; background: #fff; font: 700 12px system-ui, sans-serif; cursor: pointer; }
+.graph-tools button:hover { background: #eaf2fc; }
+.graph-tools span { min-width: 38px; text-align: center; color: #687d91; font: 10px ui-monospace, monospace; }
+.graph-tools .direction-note { min-width: 0; margin-right: auto; color: #738196; }
+.empty-diagram { justify-content: center; color: #95a1b1; font-size: 12px; }
+.m1-edge { fill: none; stroke: #657c96; stroke-width: 2.2; stroke-linecap: round; transition: stroke-dashoffset .8s cubic-bezier(.2,.7,.2,1), stroke .16s ease, stroke-width .16s ease; }
+.m1-edge:hover { stroke: #245fa8; stroke-width: 3; }
+.m1-edge.m1-edge-visible { stroke-dashoffset: 0 !important; }
+.m1-edge-label { fill: #354c68; font: 700 12px system-ui, sans-serif; text-anchor: middle; paint-order: stroke; stroke: #fbfdff; stroke-width: 10px; stroke-linejoin: round; }
+.m1-start-arrow { fill: none; stroke: #3275c5; stroke-width: 2; }
+.m1-state { fill: #fff; stroke: #71839a; stroke-width: 2; filter: drop-shadow(0 3px 3px #263d581d); transform-box: fill-box; transform-origin: center; animation: m1-state-in .42s cubic-bezier(.2,.8,.25,1.2) both; }
+.m1-start-state { fill: #e5f1ff; stroke: #3275c5; stroke-width: 2.5; }
+.m1-final-state { fill: #eff9f3; stroke: #32825d; }
+.m1-start-state.m1-final-state { fill: #e9f4ff; stroke: #3275c5; }
+.m1-final-ring { fill: none; stroke: #32825d; stroke-width: 1.5; }
+.preset-section { margin-top: 12px; padding: 10px; border: 1px solid #dce5ef; border-radius: 10px; background: linear-gradient(135deg, #f9fbfe, #f1f6fc); }
+.preset-section > b, .preset-section > span { display: block; }
+.preset-section > b { color: #263f5d; font-size: 11px; }
+.preset-section > span { margin: 2px 0 8px; color: #718196; font-size: 10px; }
+.preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.preset-button { min-height: 34px; padding: 6px 7px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #345472; font-size: 10px; box-shadow: none; }
+.preset-button:hover { background: #eaf2fc; }
+.preset-button.selected { border-color: #71a1d8; background: #eaf3ff; color: #2157a5; }
+.preset-info { margin-top: 8px; padding: 9px 11px; border: 1px solid #d5e7f7; border-radius: 8px; color: #31577d; background: #eef6fd; font-size: 12px; }
+.m1-trap-state { fill: #fff3de; stroke: #d69036; stroke-dasharray: 4 3; }
+.m1-trap-label { fill: #a96616; font: 700 10px system-ui, sans-serif; text-anchor: middle; }
+.trap-badge { display: inline-block; border-radius: 20px; padding: 1px 6px; background: #fff1d9; color: #965a12; font-size: 10px; font-weight: 800; }
+.m1-state-label { fill: #20344e; font: 650 12px system-ui, sans-serif; text-anchor: middle; dominant-baseline: middle; animation: m1-label-in .28s ease-out both; }
+.stat, .subset { border-radius: 10px; box-shadow: 0 2px 6px #1e36500a; }
+.subset.trap { border-color: #e5c38e; background: #fff8ec; }
+.step { border: 1px solid #dce8f7; border-left: 3px solid #3977c5; border-radius: 9px; background: #f8faff; transition: transform .18s ease, box-shadow .18s ease; }
+.step:hover { transform: translateX(2px); box-shadow: 0 3px 10px #1e36500c; }
+table { border-radius: 8px; overflow: hidden; }
+th { background: #f1f5f9; }
+footer { padding-top: 18px; }
+@keyframes m1-state-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
+@keyframes m1-label-in { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 900px) { .diagram-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

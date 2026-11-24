@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive epsilon-NFA to DFA subset-construction simulator">
+  <title>Epsilon-NFA to DFA | M2 Simulator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="polish.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">ε</span><div><small>CSET302 · Automata Theory</small><h1>Epsilon-NFA to DFA</h1><span class="brand-subtitle">M2 Interactive Lab <i>Step playback</i><i>Live equivalence checks</i></span></div></div>
+    <div class="top-actions"><a class="button button-light home-link" href="index.html">Home</a><button id="openHandbook" type="button" class="button button-light" aria-haspopup="dialog" aria-controls="handbook">Handbook</button><button id="loadSample" class="button button-light">Load basic case</button><button id="convertButton" class="button button-primary">Convert automaton</button></div>
+  </header>
+
+  <dialog id="handbook" aria-labelledby="handbookTitle">
+    <header class="book-header">
+      <h2 id="handbookTitle">Conversion handbook</h2>
+      <form method="dialog"><button class="button button-light" autofocus>Close</button></form>
+    </header>
+    <article class="book-content">
+      <h3>What changes when we convert?</h3>
+      <p>An <strong>ε-NFA</strong> is a nondeterministic finite automaton. A state can have zero, one or several destinations on a symbol. An ε arrow can be followed without reading any input. A word is accepted if at least one path reads the whole word and ends in an accepting state.</p>
+      <p>A <strong>DFA</strong> is a deterministic finite automaton. Each state has exactly one destination for each input symbol. Each arrow consumes one symbol. In the converted DFA, one state represents the entire set of ε-NFA states that could be active after the same input.</p>
+
+      <h3>How to convert any given ε-NFA</h3>
+      <ol>
+        <li><strong>Read the diagram.</strong> List the states and input alphabet. The incoming start arrow identifies the start state. Double circles mark accepting states.</li>
+        <li><strong>Make the ε-NFA table.</strong> Give each state a row and each input symbol a column. Add an ε column. For each cell, collect the destinations of all matching outgoing arrows. Write ∅ if there are none.</li>
+        <li><strong>Find the start subset.</strong> Begin with the start state and follow every chain of ε arrows. Include the starting state itself. Visit each state once so cycles terminate. This set is its <em>ε-closure</em>. Name it D0.</li>
+        <li><strong>Fill one DFA cell.</strong> Pick a subset S and an input symbol. Collect the destinations on that symbol from every state in S. This union is the <em>move</em>. Take the ε-closure of the move to include all states reachable after consuming that symbol.</li>
+        <li><strong>Register the destination.</strong> If the resulting set already has a name, reuse it. Otherwise name it D1, D2, and so on, and add a row. If ∅ is reached, give it a row too. Every symbol from ∅ leads back to ∅.</li>
+        <li><strong>Finish the table and diagram.</strong> Process every symbol of every newly added row until all cells are filled. The DFA table has one column per input symbol. Mark D0 as the start and mark every subset containing an original accepting state as accepting. Draw one labeled arrow per cell.</li>
+      </ol>
+
+      <h3>Work through the Basic closure preset</h3>
+      <p>The diagram has an ε arrow from q0 to q1, an <b>a</b> loop at q1, a <b>b</b> arrow from q1 to q2 and a <b>b</b> loop at q2. Its alphabet is {a, b}.</p>
+      <table><caption>1. Read the outgoing arrows</caption><thead><tr><th scope="col">ε-NFA state</th><th scope="col">a</th><th scope="col">b</th><th scope="col">ε</th></tr></thead><tbody>
+        <tr><th scope="row">q0 · start</th><td>∅</td><td>∅</td><td>{q1}</td></tr>
+        <tr><th scope="row">q1</th><td>{q1}</td><td>{q2}</td><td>∅</td></tr>
+        <tr><th scope="row">q2 · accept</th><td>∅</td><td>{q2}</td><td>∅</td></tr>
+      </tbody></table>
+      <p><strong>2. Start at D0 = {q0, q1}.</strong> Before the first symbol, the machine can stay at q0 or take ε to q1. On <b>a</b>, combine the two entries ∅ and {q1}. The move is {q1}, whose closure is still {q1}, so write D1. On <b>b</b>, the move is {q2} and its closure is {q2}, so write D2.</p>
+      <p><strong>3. Expand the new rows.</strong> From D1 = {q1}, <b>a</b> returns to D1 and <b>b</b> reaches D2. From D2 = {q2}, <b>b</b> stays at D2. On <b>a</b> the move is empty, and the closure of ∅ is ∅. Register D3. Its two moves are also empty, so the table is complete.</p>
+      <table><caption>4. Completed DFA transition table</caption><thead><tr><th scope="col">DFA state</th><th scope="col">Subset</th><th scope="col">a</th><th scope="col">b</th></tr></thead><tbody>
+        <tr><th scope="row">D0 · start</th><td>{q0, q1}</td><td>D1</td><td>D2</td></tr>
+        <tr><th scope="row">D1</th><td>{q1}</td><td>D1</td><td>D2</td></tr>
+        <tr><th scope="row">D2 · accept</th><td>{q2}</td><td>D3</td><td>D2</td></tr>
+        <tr><th scope="row">D3 · trap</th><td>∅</td><td>D3</td><td>D3</td></tr>
+      </tbody></table>
+      <p><strong>Check your result.</strong> Reading <b>ab</b> gives D0 → D1 → D2, which accepts because D2 contains q2. Reading <b>ba</b> gives D0 → D2 → D3, which rejects. To follow the same steps on screen, close the handbook, select <b>Basic closure</b>, click <b>Convert automaton</b> and use <b>Next</b> in the conversion simulator.</p>
+    </article>
+  </dialog>
+
+  <main class="page">
+    <div id="notice" class="notice" role="status" aria-live="polite">Enter an automaton or load the example, then select <b>Convert automaton</b>.</div>
+    <div class="workspace">
+      <aside class="panel editor-panel">
+        <div class="panel-heading"><div><p class="eyebrow">INPUT</p><h2>Your epsilon-NFA</h2></div><span class="step-number">1</span></div>
+        <p class="muted">Define states and transitions. Use <code>eps</code> for a transition that consumes no input. Symbols may be multi-character.</p>
+        <div class="field-grid">
+          <label>States<input id="statesInput" autocomplete="off"></label>
+          <label>Alphabet<input id="alphabetInput" autocomplete="off"></label>
+          <label>Start state<input id="startInput" autocomplete="off"></label>
+          <label>Accepting states<input id="finalsInput" autocomplete="off"></label>
+        </div>
+        <label class="transition-label">Transitions <span>one per line: from, symbol, to</span>
+          <textarea autocomplete="off" id="transitionsInput" spellcheck="false"></textarea>
+        </label>
+        <div class="preset-section"><b>Example test cases</b><span>Select a case to fill the form, then convert.</span>
+          <div class="preset-grid">
+            <button type="button" class="preset-button" data-example="basic">1 · Basic closure</button>
+            <button type="button" class="preset-button" data-example="branching">2 · Epsilon branching</button>
+            <button type="button" class="preset-button" data-example="cycle">3 · Epsilon cycle</button>
+            <button type="button" class="preset-button" data-example="trap">4 · Trap state</button>
+            <button type="button" class="preset-button" data-example="suffix">5 · Ends in ab</button>
+            <button type="button" class="preset-button" data-example="parity">6 · Even number of 1s</button>
+          </div>
+        </div>
+        <div id="validation" class="validation" hidden></div>
+        <div class="editor-tip"><b>Input rules</b><ul><li>Separate list items with commas.</li><li>For multi-character symbols, separate input tokens with commas or spaces.</li><li>Missing transitions lead to the trap state when the move is empty.</li></ul></div>
+      </aside>
+
+      <section class="results">
+        <section class="panel result-panel">
+          <div class="panel-heading"><div><p class="eyebrow">OUTPUT</p><h2>Equivalent DFA</h2></div><span class="step-number">2</span></div>
+          <div id="summary" class="summary empty-state">Convert an automaton to see its DFA.</div>
+          <div class="subset-section"><h3>Reachable DFA subsets</h3><div id="dfaSubsets" class="subset-cards empty-state">Subsets appear after conversion.</div></div>
+          <div class="diagram-grid">
+            <div class="diagram-card"><div class="diagram-heading"><h3>Input epsilon-NFA</h3><span class="legend"><i class="legend-start"></i>start <i class="legend-final"></i>accept</span></div><div class="graph-tools"><span class="direction-note">Drag to pan · arrow tips show direction</span><button type="button" data-graph="nfaDiagram" data-zoom="out" aria-label="Zoom out">−</button><span id="nfaDiagramZoom">100%</span><button type="button" data-graph="nfaDiagram" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-graph="nfaDiagram" data-zoom="fit">Fit</button></div><div id="nfaDiagram" class="diagram empty-diagram">Diagram appears after conversion.</div></div>
+            <div class="diagram-card"><div class="diagram-heading"><h3>Generated DFA</h3><span class="legend"><i class="legend-start"></i>start <i class="legend-final"></i>accept</span></div><div class="graph-tools"><span class="direction-note">Drag to pan · arrow tips show direction</span><button type="button" data-graph="dfaDiagram" data-zoom="out" aria-label="Zoom out">−</button><span id="dfaDiagramZoom">100%</span><button type="button" data-graph="dfaDiagram" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-graph="dfaDiagram" data-zoom="fit">Fit</button></div><div id="dfaDiagram" class="diagram empty-diagram">Diagram appears after conversion.</div></div>
+          </div>
+          <div class="table-wrap"><table id="dfaTable"><caption>DFA transition table</caption><thead></thead><tbody></tbody></table></div>
+        </section>
+
+        <section class="panel walkthrough-panel">
+          <div class="panel-heading"><div><p class="eyebrow">STEP-BY-STEP CONSTRUCTION</p><h2 id="simulation">Conversion simulator</h2></div><span class="step-number">3</span></div>
+          <p class="muted">Use Next to follow one symbol, then take its ε-closure. Each completed transition appears in the graph.</p>
+          <div id="walkthrough" aria-live="polite" class="walkthrough empty-state">Convert an automaton to begin.</div>
+          <div class="walk-controls"><button id="restartSteps" class="button button-light" disabled>Restart</button><button id="previousStep" class="button button-light" disabled>← Previous</button><button id="playSteps" class="button button-accent" disabled>▶ Play steps</button><span id="stepPosition" class="step-position">Step 0 of 0</span><button id="nextStep" class="button button-primary" disabled>Next →</button><button id="showAllSteps" class="button button-light" disabled>Show all</button></div>
+          <div class="diagram-card construction-card">
+            <div class="diagram-heading"><h3>DFA under construction</h3><span id="builtCount" class="legend"></span></div>
+            <div class="graph-tools"><span class="direction-note">Drag to pan</span><button type="button" data-graph="constructionDiagram" data-zoom="out" aria-label="Zoom out of construction graph">−</button><span id="constructionDiagramZoom">100%</span><button type="button" data-graph="constructionDiagram" data-zoom="in" aria-label="Zoom in on construction graph">+</button><button type="button" data-graph="constructionDiagram" data-zoom="fit">Fit</button></div>
+            <div id="constructionDiagram" class="diagram empty-diagram">Convert an automaton to build its DFA.</div>
+          </div>
+          <div id="allSteps" class="all-steps" hidden></div>
+        </section>
+
+        <section class="panel tester-panel">
+          <div class="panel-heading"><div><p class="eyebrow">VALIDATION</p><h2>Check an input string</h2></div><span class="step-number">4</span></div>
+          <p class="muted">After converting, enter a word and select Check string to run it on the graph. Leave the field empty for ε. Separate multi-character symbols with commas or spaces.</p>
+          <div class="test-controls"><label for="stringInput">Input symbols<input id="stringInput" autocomplete="off" placeholder="e.g. ab or token, end"></label><button id="testStringButton" class="button button-primary" disabled>Check string</button></div>
+          <div id="testResult" class="test-result" aria-live="polite"></div>
+          <section id="wordRun" class="word-run" hidden aria-labelledby="wordRunTitle">
+            <h3 id="wordRunTitle">String simulation</h3>
+            <label>Machine to display
+              <select id="wordMachine"><option value="dfa">DFA</option><option value="nfa">ε-NFA</option></select>
+            </label>
+            <div id="wordTape" class="word-tape" aria-label="Input symbols in reading order"></div>
+            <div class="diagram-card">
+              <div class="graph-tools"><span class="direction-note">Teal highlights the active states and transitions</span><button type="button" data-graph="wordDiagram" data-zoom="out" aria-label="Zoom out">−</button><span id="wordDiagramZoom">100%</span><button type="button" data-graph="wordDiagram" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-graph="wordDiagram" data-zoom="fit">Fit</button></div>
+              <div id="wordDiagram" class="diagram"></div>
+            </div>
+            <div id="wordFrame" class="step-card" aria-live="polite"></div>
+            <div class="walk-controls">
+              <button id="wordBack" type="button" class="button button-light">← Previous</button>
+              <button id="wordNext" type="button" class="button button-primary">Read next symbol →</button>
+              <button id="wordRestart" type="button" class="button button-light">Restart</button>
+              <button id="wordPlay" type="button" class="button button-accent">Play</button>
+            </div>
+          </section>
+        </section>
+      </section>
+    </div>
+    <footer>Subset construction · ε-closure · equivalent DFA <span>M2 implementation</span></footer>
+  </main>
+  <script src="src/automata.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>

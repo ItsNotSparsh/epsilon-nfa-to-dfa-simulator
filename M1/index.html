@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>epsilon-NFA to DFA | M1 Design Prototype</title>
+  <link rel="stylesheet" href="M1-simulator.css">
+  <link rel="stylesheet" href="M1-polish.css">
+</head>
+<body>
+  <header>
+    <div class="m1-brand"><span class="m1-mark">ε</span><div><small>CSET302 · SIMULATOR DESIGN · M1</small><h1>Epsilon-NFA to DFA</h1><p>See how epsilon moves and subset construction produce a deterministic machine.</p></div></div>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+      <h2>1. Define the epsilon-NFA</h2>
+      <div class="fields">
+        <label>States<input autocomplete="off" id="states"></label>
+        <label>Input alphabet <span class="help">May use multi-character tokens; blank is allowed.</span><input autocomplete="off" id="alphabet"></label>
+        <label>Start state<input autocomplete="off" id="start"></label>
+        <label>Final states<input autocomplete="off" id="finals"></label>
+        <label>
+          Transitions
+          <span class="help">One per line: source, symbol, destination (use eps for epsilon)</span>
+          <textarea autocomplete="off" id="transitions"></textarea>
+        </label>
+        <div class="actions">
+          <button id="convert" type="button">Convert to DFA</button>
+        </div>
+        <div class="preset-section"><b>Example test cases</b><span>Select a case to fill the form, then click Convert to DFA.</span>
+          <div class="preset-grid">
+            <button type="button" class="preset-button" data-example="basic">1 · Basic closure</button>
+            <button type="button" class="preset-button" data-example="branching">2 · Epsilon branching</button>
+            <button type="button" class="preset-button" data-example="cycle">3 · Epsilon cycle</button>
+            <button type="button" class="preset-button" data-example="trap">4 · Trap state</button>
+          </div>
+        </div>
+        <div id="error" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="right">
+      <section class="card">
+        <h2>2. Generated DFA</h2>
+        <div id="summary" class="stats"></div>
+        <h3>Reachable DFA subsets</h3>
+        <div id="subsets" class="subsets"></div>
+        <h3>State diagrams</h3>
+        <div class="diagram-grid">
+          <div class="diagram-card"><div class="diagram-heading"><b>Input epsilon-NFA</b><span>ε edges shown</span></div><div class="graph-tools"><span class="direction-note">Drag to pan · arrow tips show direction</span><button type="button" data-graph="nfaDiagram" data-zoom="out" aria-label="Zoom out">−</button><span id="nfaDiagramZoom">100%</span><button type="button" data-graph="nfaDiagram" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-graph="nfaDiagram" data-zoom="fit">Fit</button></div><div id="nfaDiagram" class="diagram empty-diagram">Convert an automaton to show its diagram.</div></div>
+          <div class="diagram-card"><div class="diagram-heading"><b>Generated DFA</b><span>Subsets become states</span></div><div class="graph-tools"><span class="direction-note">Drag to pan · arrow tips show direction</span><button type="button" data-graph="dfaDiagram" data-zoom="out" aria-label="Zoom out">−</button><span id="dfaDiagramZoom">100%</span><button type="button" data-graph="dfaDiagram" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-graph="dfaDiagram" data-zoom="fit">Fit</button></div><div id="dfaDiagram" class="diagram empty-diagram">Convert an automaton to show its diagram.</div></div>
+        </div>
+        <h3>Transition table</h3>
+        <div id="table" class="table-wrap"></div>
+      </section>
+
+      <section class="card">
+        <h2>3. Conversion trace</h2>
+        <p class="help">Each row shows the NFA move, then epsilon-closure of that move.</p>
+        <div id="trace"></div>
+      </section>
+
+      <section class="card">
+        <h2>4. Validate a string</h2>
+        <div class="tester">
+          <label>Input symbols<input autocomplete="off" id="testString" placeholder="ab or token, end"></label>
+          <button id="test" disabled type="button">Check both machines</button>
+          <span id="testResult" class="result" aria-live="polite"></span>
+        </div>
+        <div id="path" class="help">Separate multi-character input symbols with commas or spaces.</div>
+      </section>
+    </div>
+  </main>
+
+  <footer>M1 design prototype. DFA labels D0, D1, ... represent sets of source NFA states. Empty set is ∅.</footer>
+  <script src="js/epsilon-nfa.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

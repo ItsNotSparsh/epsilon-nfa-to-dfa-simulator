@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore epsilon closures, build an equivalent DFA, and test words on both machines.">
+  <title>Automata Lab | ε-NFA to DFA</title>
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <header><strong><span class="mark" aria-hidden="true">ε</span> Automata Lab</strong><span>CSET302 · Bennett University</span></header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="kicker">Automata Theory / Topic 02</p>
+      <h1 id="page-title">ε-NFA to DFA<br><em>conversion</em></h1>
+      <p class="lead">Follow an ε-transition, build the reachable subsets, and watch a word travel through both machines.</p>
+      <a class="launch" href="simulator.html">Open simulator <span aria-hidden="true">→</span></a>
+      <p class="hint">Enter your own automaton or choose one of six examples.</p>
+    </section>
+    <figure aria-labelledby="example-title">
+      <figcaption id="example-title">Inside the Basic closure example</figcaption>
+      <div class="drawing">
+        <div class="row" aria-label="q0 reaches q1 on epsilon"><span class="node">q0</span><span class="arrow"><i>ε</i>⟶</span><span class="node">q1</span></div>
+        <div class="rule"><span>ε-closure of q0</span></div>
+        <div class="subset"><b>D0</b> = {q0, q1}</div>
+      </div>
+      <p>Before the first input symbol, either state can be active. Together they form the DFA’s start state.</p>
+    </figure>
+  </main>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Local operating system and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vs/
+.idea/
+.vscode/*.local.json
+*.swp
+
+# Temporary Word files and intermediate report copies
+~$*
+*.editing.docx
+
+# Local dependencies, test output and logs
+node_modules/
+coverage/
+*.log
+__pycache__/
+.venv/
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Milestone reports
+/M1/M1-Technical-Report.docx
+/M2/Report/M2-Technical-Report-Final.docx
